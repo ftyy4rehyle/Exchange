@@ -22,30 +22,66 @@
     }
     else
     {
+        <!-- 金額輸入區 -->
+        <div class="converter-box">
+            <label class="converter-label">輸入金額</label>
+            <div class="converter-row">
+                <input id="amountInput" class="amount-input" type="number" min="0" placeholder="請輸入金額" value="1" />
+                <select id="currencySelect" class="currency-select">
+                    @if (Model.BaseCurrency == "TWD")
+                    {
+                        <option value="TWD">TWD 台幣</option>
+                        <option value="USD">USD 美元</option>
+                        <option value="JPY">JPY 日幣</option>
+                    }
+                    else
+                    {
+                        <option value="USD">USD 美元</option>
+                        <option value="JPY">JPY 日幣</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <!-- 換算結果表格 -->
         <table class="rate-table">
             <thead>
                 <tr>
                     <th>幣別</th>
-                    <th>匯率（1 @Model.BaseCurrency =）</th>
+                    <th>匯率（1 @Model.BaseCurrency）</th>
+                    <th>換算結果</th>
                 </tr>
             </thead>
             <tbody>
                 @if (Model.BaseCurrency == "TWD")
                 {
-                    <tr>
+                    <tr id="row-USD">
                         <td><span class="currency-flag">🇺🇸</span> USD 美元</td>
                         <td class="rate-value">@(Model.UsdRate?.ToString("F4") ?? "—")</td>
+                        <td class="converted-value" id="conv-USD">—</td>
                     </tr>
-                    <tr>
+                    <tr id="row-JPY">
                         <td><span class="currency-flag">🇯🇵</span> JPY 日幣</td>
                         <td class="rate-value">@(Model.JpyRate?.ToString("F4") ?? "—")</td>
+                        <td class="converted-value" id="conv-JPY">—</td>
+                    </tr>
+                    <tr id="row-TWD" style="display:none">
+                        <td><span class="currency-flag">🇹🇼</span> TWD 台幣</td>
+                        <td class="rate-value">1</td>
+                        <td class="converted-value" id="conv-TWD">—</td>
                     </tr>
                 }
                 else
                 {
-                    <tr>
+                    <tr id="row-JPY">
                         <td><span class="currency-flag">🇯🇵</span> JPY 日幣</td>
                         <td class="rate-value">@(Model.JpyRate?.ToString("F4") ?? "—")</td>
+                        <td class="converted-value" id="conv-JPY">—</td>
+                    </tr>
+                    <tr id="row-USD" style="display:none">
+                        <td><span class="currency-flag">🇺🇸</span> USD 美元</td>
+                        <td class="rate-value">1</td>
+                        <td class="converted-value" id="conv-USD">—</td>
                     </tr>
                 }
             </tbody>
@@ -61,3 +97,74 @@
 
     <button class="btn-refresh" onclick="location.href='?base=@Model.BaseCurrency'">重新整理</button>
 </div>
+
+@if (!Model.HasError)
+{
+    <script>
+        const BASE   = "@Model.BaseCurrency";
+        const RATES  = {
+            USD: @(Model.UsdRate?.ToString("F6", System.Globalization.CultureInfo.InvariantCulture) ?? "null"),
+            JPY: @(Model.JpyRate?.ToString("F6", System.Globalization.CultureInfo.InvariantCulture) ?? "null"),
+            TWD: 1
+        };
+
+        // 將任意幣別先換成 BASE，再換成目標幣別
+        function convert(amount, from, to) {
+            if (RATES[from] == null || RATES[to] == null) return null;
+
+            let inBase;
+            if (BASE === "TWD") {
+                // RATES[X] = 1 TWD 換多少 X
+                inBase = (from === "TWD") ? amount : amount / RATES[from];
+                return (to === "TWD") ? inBase : inBase * RATES[to];
+            } else {
+                // BASE = USD, RATES[JPY] = 1 USD 換多少 JPY
+                inBase = (from === "USD") ? amount : amount / RATES[from];
+                return (to === "USD") ? inBase : inBase * RATES[to];
+            }
+        }
+
+        function formatAmount(value, currency) {
+            if (value == null || isNaN(value)) return "—";
+            if (currency === "JPY") return Math.round(value).toLocaleString() + " JPY";
+            if (currency === "TWD") return value.toFixed(2) + " TWD";
+            return value.toFixed(4) + " " + currency;
+        }
+
+        function recalculate() {
+            const raw    = parseFloat(document.getElementById("amountInput").value);
+            const from   = document.getElementById("currencySelect").value;
+            const amount = isNaN(raw) || raw < 0 ? null : raw;
+
+            // 決定哪些 row 要顯示（排除輸入幣別本身）
+            const targets = BASE === "TWD"
+                ? ["USD", "JPY", "TWD"]
+                : ["USD", "JPY"];
+
+            targets.forEach(to => {
+                const row  = document.getElementById("row-" + to);
+                const cell = document.getElementById("conv-" + to);
+                if (!row || !cell) return;
+
+                if (to === from) {
+                    row.style.display = "none";
+                    return;
+                }
+
+                row.style.display = "";
+                if (amount === null) {
+                    cell.textContent = "—";
+                } else {
+                    const result = convert(amount, from, to);
+                    cell.textContent = formatAmount(result, to);
+                }
+            });
+        }
+
+        document.getElementById("amountInput").addEventListener("input", recalculate);
+        document.getElementById("currencySelect").addEventListener("change", recalculate);
+
+        // 頁面載入時執行一次
+        recalculate();
+    </script>
+}

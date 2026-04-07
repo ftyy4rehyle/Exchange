@@ -132,6 +132,66 @@ main {
     font-variant-numeric: tabular-nums;
 }
 
+/* ── Converter box ── */
+.converter-box {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.2rem;
+}
+
+.converter-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+}
+
+.converter-row {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.amount-input {
+    flex: 1;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.amount-input:focus {
+    border-color: #1a56db;
+}
+
+.currency-select {
+    padding: 0.55rem 0.6rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background: #fff;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.currency-select:focus {
+    border-color: #1a56db;
+}
+
+/* ── Converted value ── */
+.converted-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1a7a4a;
+    font-variant-numeric: tabular-nums;
+}
+
 /* ── Update time ── */
 .update-time {
     font-size: 0.8rem;
