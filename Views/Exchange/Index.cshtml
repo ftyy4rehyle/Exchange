@@ -1,0 +1,63 @@
+@model Exchange.Models.ExchangeRateViewModel
+@{
+    ViewData["Title"] = "匯率查詢";
+    var isTwd = Model.BaseCurrency == "TWD";
+    var switchBase = isTwd ? "USD" : "TWD";
+    var switchLabel = isTwd ? "切換為 USD 基準" : "切換為 TWD 基準";
+}
+
+<div class="rate-card">
+    <h1>即時匯率</h1>
+
+    <div class="base-switcher">
+        <span>基準幣別：<strong>@Model.BaseCurrency</strong></span>
+        <a class="btn-switch" href="?base=@switchBase">@switchLabel</a>
+    </div>
+
+    @if (Model.HasError)
+    {
+        <div class="alert-error">
+            <span class="icon">⚠</span> @Model.ErrorMessage
+        </div>
+    }
+    else
+    {
+        <table class="rate-table">
+            <thead>
+                <tr>
+                    <th>幣別</th>
+                    <th>匯率（1 @Model.BaseCurrency =）</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.BaseCurrency == "TWD")
+                {
+                    <tr>
+                        <td><span class="currency-flag">🇺🇸</span> USD 美元</td>
+                        <td class="rate-value">@(Model.UsdRate?.ToString("F4") ?? "—")</td>
+                    </tr>
+                    <tr>
+                        <td><span class="currency-flag">🇯🇵</span> JPY 日幣</td>
+                        <td class="rate-value">@(Model.JpyRate?.ToString("F4") ?? "—")</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td><span class="currency-flag">🇯🇵</span> JPY 日幣</td>
+                        <td class="rate-value">@(Model.JpyRate?.ToString("F4") ?? "—")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (Model.LastUpdated.HasValue)
+        {
+            <p class="update-time">
+                更新時間：@Model.LastUpdated.Value.ToString("yyyy-MM-dd HH:mm") UTC
+            </p>
+        }
+    }
+
+    <button class="btn-refresh" onclick="location.href='?base=@Model.BaseCurrency'">重新整理</button>
+</div>

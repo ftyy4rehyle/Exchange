@@ -1,0 +1,169 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+    background: #f0f4f8;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Header ── */
+header {
+    background: #1a56db;
+    padding: 1rem 2rem;
+}
+
+header nav {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.brand {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* ── Main ── */
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2.5rem 1rem;
+}
+
+/* ── Card ── */
+.rate-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    padding: 2rem 2.5rem;
+    width: 100%;
+    max-width: 480px;
+}
+
+.rate-card h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.2rem;
+    color: #1a56db;
+}
+
+/* ── Base switcher ── */
+.base-switcher {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.btn-switch {
+    background: #e8f0fe;
+    color: #1a56db;
+    border: 1px solid #c6d8fb;
+    border-radius: 6px;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.btn-switch:hover {
+    background: #c6d8fb;
+}
+
+/* ── Error ── */
+.alert-error {
+    background: #fff3f3;
+    border: 1px solid #f5c6c6;
+    color: #c0392b;
+    border-radius: 8px;
+    padding: 0.9rem 1.2rem;
+    margin-bottom: 1.2rem;
+    font-size: 0.95rem;
+}
+
+.alert-error .icon {
+    margin-right: 0.4rem;
+}
+
+/* ── Table ── */
+.rate-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+.rate-table th,
+.rate-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.rate-table thead tr {
+    background: #f8f9fa;
+    font-size: 0.85rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.rate-table tbody tr:hover {
+    background: #f0f6ff;
+}
+
+.currency-flag {
+    margin-right: 0.4rem;
+}
+
+.rate-value {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #1a56db;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ── Update time ── */
+.update-time {
+    font-size: 0.8rem;
+    color: #999;
+    margin-bottom: 1.2rem;
+}
+
+/* ── Refresh button ── */
+.btn-refresh {
+    width: 100%;
+    padding: 0.65rem;
+    background: #1a56db;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-refresh:hover {
+    background: #1446b5;
+}
+
+/* ── Footer ── */
+footer {
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.8rem;
+    color: #aaa;
+}
+
+footer a {
+    color: #aaa;
+}
